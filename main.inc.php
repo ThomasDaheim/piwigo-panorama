@@ -56,7 +56,8 @@ function piwigopanorama_photo_page()
     
     single_update(
       IMAGES_TABLE,
-      array('is_panorama' => $row['is_panorama']),
+		/* fix for issue #1 */
+      array('is_panorama' => ($row['is_panorama'])?1:0),
       array('id' => $_GET['image_id'])
       );
   }
@@ -134,7 +135,8 @@ function piwigopanorama_element_set_global_action($action, $collection)
     {
       $datas[] = array(
         'id' => $image_id,
-        'is_panorama' => $is
+		/* fix for issue #1 */
+        'is_panorama' => ($is?1:0)
         );
     }
 
@@ -289,7 +291,8 @@ function piwigopanorama_save_admintools()
   
     single_update(
       IMAGES_TABLE,
-      array('is_panorama' => isset($_POST['is_panorama'])),
+		/* fix for issue #1 */
+      array('is_panorama' => (isset($_POST['is_panorama'])?1:0)),
       array('id' => $page['image_id'])
       );
   }
@@ -297,10 +300,10 @@ function piwigopanorama_save_admintools()
 
 function piwigopanorama_admintools_prefilter($content)
 {
-  $search = '<label for="quick_edit_tags">';
-  $add = '<label><input type="checkbox" style="width:auto;" name="is_panorama" {if $ato_QUICK_EDIT_is_panorama}checked{/if}> Photo Sphere</label>';
-  
-  return str_replace($search, $add.$search, $content);
+	$search = '<label for="quick_edit_tags">';
+	$add = '<label><input type="checkbox" style="width:auto;" name="is_panorama" {if $ato_QUICK_EDIT_is_panorama}checked{/if}> Photo Sphere</label>';
+
+	return str_replace($search, $add.$search, $content);
 }
 
 /* setup callback */
